@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tiles-definitions PUBLIC
+       "-//Apache Software Foundation//DTD Tiles Configuration 2.0//EN"
+       "http://tiles.apache.org/dtds/tiles-config_2_0.dtd">
+<tiles-definitions>
+	<definition name="base.definition" template="/WEB-INF/views/layout.jsp">
+		<put-attribute name="header" value="/WEB-INF/views/header.jsp" />
+		<put-attribute name="body" value="" />
+		<put-attribute name="footer" value="/WEB-INF/views/footer.jsp" />
+	</definition>
+
+	<definition name="welcome" extends="base.definition">
+		<put-attribute name="body" value="/WEB-INF/views/welcome.jsp" />
+	</definition>
+
+	<definition name="administration" extends="base.definition">
+		<put-attribute name="body" value="/WEB-INF/views/administration.jsp" />
+	</definition>
+
+	<!-- Views relates to Dynamic StoreModel Addition -->
+	<definition name="storeAdministration" extends="base.definition">
+		<put-attribute name="body" value="/WEB-INF/views/storeAdministration.jsp" />
+	</definition>
+	
+	<definition name="addNamespace" extends="base.definition">
+		<put-attribute name="body" value="/WEB-INF/views/namespaceAddition.jsp" />
+	</definition>
+
+	<definition name="addStoreSuccess" extends="base.definition">
+		<put-attribute name="body" value="/WEB-INF/views/addStoreSuccess.jsp" />
+	</definition>
+
+	<definition name="addStoreFailure" extends="base.definition">
+		<put-attribute name="body" value="/WEB-INF/views/addStoreFailure.jsp" />
+	</definition>
+	
+	<definition name="updateNamespace" extends="base.definition">
+		<put-attribute name="body" value="/WEB-INF/views/namespaceUpdate.jsp" />
+	</definition>
+
+	<definition name="updateStoreSuccess" extends="base.definition">
+		<put-attribute name="body" value="/WEB-INF/views/updateStoreSuccess.jsp" />
+	</definition>
+
+	<definition name="updateStoreFailure" extends="base.definition">
+		<put-attribute name="body" value="/WEB-INF/views/updateStoreFailure.jsp" />
+	</definition>
+
+	<!-- Views relates to displaying clusterName -->
+	<definition name="clusterName" extends="base.definition">
+		<put-attribute name="body" value="/WEB-INF/views/clusterName.jsp" />
+	</definition>
+
+	<!-- Views relates to displaying stores -->
+	<definition name="namespaces" extends="base.definition">
+		<put-attribute name="body" value="/WEB-INF/views/stores.jsp" />
+	</definition>
+	
+	<!-- Views relates to JClusterRebalancer -->
+	<definition name="jClusterRebalancer" extends="base.definition">
+		<put-attribute name="body" value="/WEB-INF/views/jClusterRebalancer.jsp" />
+	</definition>
+	
+	<definition name="jClusterRebalancerFailure" extends="base.definition">
+		<put-attribute name="body" value="/WEB-INF/views/jClusterRebalancerFailure.jsp" />
+	</definition>
+	
+	<definition name="jClusterRebalancerSuccess" extends="base.definition">
+		<put-attribute name="body" value="/WEB-INF/views/jClusterRebalancerSuccess.jsp" />
+	</definition>
+	
+	<definition name="pendingTransitions" extends="base.definition">
+		<put-attribute name="body" value="/WEB-INF/views/pendingTransitions.jsp" />
+	</definition>
+	
+	<!-- Views relates to Cluster Health Check -->
+	<definition name="clusterHealthCheckSuccess" extends="base.definition">
+		<put-attribute name="body" value="/WEB-INF/views/clusterHealthCheckSuccess.jsp" />
+	</definition>
+	
+	<definition name="clusterHealthCheckFailure" extends="base.definition">
+		<put-attribute name="body" value="/WEB-INF/views/clusterHealthCheckFailure.jsp" />
+	</definition>
+	
+	<!-- Views relates to VShards RebalanceModel -->
+	<definition name="rebalance" extends="base.definition">
+		<put-attribute name="body" value="/WEB-INF/views/rebalance.jsp" />
+	</definition>
+	
+	<definition name="rebalanceInProgress" extends="base.definition">
+		<put-attribute name="body" value="/WEB-INF/views/rebalanceInProgress.jsp" />
+	</definition>
+	
+	<definition name="vshardsRebalance" extends="base.definition">
+		<put-attribute name="body" value="/WEB-INF/views/vshardsRebalance.jsp" />
+	</definition>
+	
+	<definition name="vshardsRebalance/showPlan" extends="base.definition">
+		<put-attribute name="body" value="/WEB-INF/views/showPlan.jsp" />
+	</definition>
+	
+	<definition name="showPlanError" extends="base.definition">
+		<put-attribute name="body" value="/WEB-INF/views/showPlanError.jsp" />
+	</definition>
+
+</tiles-definitions>
