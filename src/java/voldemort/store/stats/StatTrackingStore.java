@@ -38,11 +38,14 @@ import voldemort.versioning.Versioned;
  */
 public class StatTrackingStore extends DelegatingStore<ByteArray, byte[], byte[]> {
 
-    private StoreStats stats;
+    private StatsRepository statsRepository;
+    private String storeName;
 
     public StatTrackingStore(Store<ByteArray, byte[], byte[]> innerStore, StoreStats parentStats) {
         super(innerStore);
-        this.stats = new StoreStats(parentStats);
+        statsRepository = StatsRepository.getInstance();
+        storeName = innerStore.getName();
+        statsRepository.createStats(storeName, parentStats);
     }
 
     @Override
@@ -51,10 +54,10 @@ public class StatTrackingStore extends DelegatingStore<ByteArray, byte[], byte[]
         try {
             return super.delete(key, version);
         } catch(VoldemortException e) {
-            stats.recordTime(Tracked.EXCEPTION, System.nanoTime() - start);
+            statsRepository.getStats(storeName).recordTime(Tracked.EXCEPTION, System.nanoTime() - start);
             throw e;
         } finally {
-            stats.recordTime(Tracked.DELETE, System.nanoTime() - start);
+            statsRepository.getStats(storeName).recordTime(Tracked.DELETE, System.nanoTime() - start);
         }
     }
 
@@ -66,7 +69,7 @@ public class StatTrackingStore extends DelegatingStore<ByteArray, byte[], byte[]
             result = super.get(key, transforms);
             return result;
         } catch(VoldemortException e) {
-            stats.recordTime(Tracked.EXCEPTION, System.nanoTime() - start);
+            statsRepository.getStats(storeName).recordTime(Tracked.EXCEPTION, System.nanoTime() - start);
             throw e;
         } finally {
             long duration = System.nanoTime() - start;
@@ -78,7 +81,7 @@ public class StatTrackingStore extends DelegatingStore<ByteArray, byte[], byte[]
                     totalBytes += bytes.getValue().length;
                 }
             }
-            stats.recordGetTime(duration, returningEmpty, totalBytes);
+            statsRepository.getStats(storeName).recordGetTime(duration, returningEmpty, totalBytes);
         }
     }
 
@@ -92,7 +95,7 @@ public class StatTrackingStore extends DelegatingStore<ByteArray, byte[], byte[]
             result = super.getAll(keys, transforms);
             return result;
         } catch(VoldemortException e) {
-            stats.recordTime(Tracked.EXCEPTION, System.nanoTime() - start);
+            statsRepository.getStats(storeName).recordTime(Tracked.EXCEPTION, System.nanoTime() - start);
             throw e;
         } finally {
             long duration = System.nanoTime() - start;
@@ -116,7 +119,7 @@ public class StatTrackingStore extends DelegatingStore<ByteArray, byte[], byte[]
                 }
             }
 
-            stats.recordGetAllTime(duration, requestedValues, returnedValues, totalBytes);
+            statsRepository.getStats(storeName).recordGetAllTime(duration, requestedValues, returnedValues, totalBytes);
         }
     }
 
@@ -127,30 +130,30 @@ public class StatTrackingStore extends DelegatingStore<ByteArray, byte[], byte[]
         try {
             super.put(key, value, transforms);
         } catch(ObsoleteVersionException e) {
-            stats.recordTime(Tracked.OBSOLETE, System.nanoTime() - start);
+            statsRepository.getStats(storeName).recordTime(Tracked.OBSOLETE, System.nanoTime() - start);
             throw e;
         } catch(VoldemortException e) {
-            stats.recordTime(Tracked.EXCEPTION, System.nanoTime() - start);
+            statsRepository.getStats(storeName).recordTime(Tracked.EXCEPTION, System.nanoTime() - start);
             throw e;
         } finally {
-            stats.recordPutTimeAndSize(System.nanoTime() - start, value.getValue().length);
+            statsRepository.getStats(storeName).recordPutTimeAndSize(System.nanoTime() - start, value.getValue().length);
         }
     }
 
     @Override
     public Object getCapability(StoreCapabilityType capability) {
         if(StoreCapabilityType.STAT_TRACKER.equals(capability))
-            return this.stats;
+            return statsRepository.getStats(storeName);
         else
             return super.getCapability(capability);
     }
 
     public StoreStats getStats() {
-        return stats;
+        return statsRepository.getStats(storeName);
     }
 
     @JmxOperation(description = "Reset statistics.", impact = MBeanOperationInfo.ACTION)
     public void resetStatistics() {
-        this.stats = new StoreStats();
+        statsRepository = StatsRepository.resetStats();
     }
 }
